@@ -1,63 +1,63 @@
 # AppLayerBundle
 
-## Описание
+## Description
 
-AppLayerBundle — это Symfony бандл, предназначенный для реализации базового слоя приложения (Application Layer) на основе принципов CQRS (Command Query Responsibility Segregation) и работы с DTO (Data Transfer Objects). Бандл предоставляет инфраструктуру для обработки HTTP-запросов, их санитизации, преобразования в DTO, синхронной или асинхронной обработки через процессоры и диспетчеризацию в очереди.
+AppLayerBundle is a Symfony bundle designed to implement the application’s base layer (Application Layer) based on CQRS (Command Query Responsibility Segregation) principles and DTO (Data Transfer Objects). The bundle provides infrastructure for handling HTTP requests, sanitizing them, converting them into DTOs, processing them synchronously or asynchronously via processors, and dispatching them to queues.
 
-Основная идея бандла — отделить логику обработки запросов от бизнес-логики, обеспечивая чистую архитектуру, где команды (изменения состояния) и запросы (чтение данных) обрабатываются отдельно. Это позволяет строить масштабируемые и тестируемые приложения.
+The core idea of the bundle is to separate request handling logic from business logic, ensuring a clean architecture where commands (state changes) and queries (data reads) are handled independently. This approach enables scalable and testable applications.
 
-## Основные возможности
+## Key Features
 
-- **Обработка запросов с DTO**: Преобразование HTTP-запросов в объекты DTO для дальнейшей обработки.
-- **Санитизация запросов**: Опциональная очистка входящих данных от нежелательного контента.
-- **Синхронная и асинхронная обработка**: Поддержка как немедленной обработки, так и диспетчеризации в очередь с использованием Symfony Messenger.
-- **Процессоры данных**: Механизм для обработки данных через специализированные процессоры.
-- **Десериализация DTO**: Использование Symfony Serializer для преобразования данных в DTO.
-- **Гибкая конфигурация**: Интеграция с Symfony Dependency Injection Container для автоматической регистрации сервисов.
+- **DTO-based request handling**: Conversion of HTTP requests into DTO objects for further processing.
+- **Request sanitization**: Optional cleaning of incoming data from unwanted content.
+- **Synchronous and asynchronous processing**: Support for immediate handling as well as queue dispatching using Symfony Messenger.
+- **Data processors**: A mechanism for processing data via specialized processors.
+- **DTO deserialization**: Use of Symfony Serializer to transform data into DTOs.
+- **Flexible configuration**: Integration with the Symfony Dependency Injection Container for automatic service registration.
 
-## Архитектура
+## Architecture
 
-Бандл состоит из следующих ключевых компонентов:
+The bundle consists of the following key components:
 
-### Контракты (Contracts)
-- `RequestHandlerInterface`: Интерфейс для обработчиков запросов, принимающих DTO.
-- `DataProcessorInterface`: Интерфейс для процессоров данных.
-- `DtoDeserializerInterface`: Интерфейс для десериализации в DTO.
-- `RequestToDtoConverterInterface`: Интерфейс для конвертации запросов в DTO.
-- `RequestSanitizerInterface`: Интерфейс для санитизации запросов.
-- `RequestHandlerTraitMapProviderInterface`: Интерфейс для предоставления маппинга трейтов обработчиков.
+### Contracts
+- `RequestHandlerInterface`: Interface for request handlers that accept DTOs.
+- `DataProcessorInterface`: Interface for data processors.
+- `DtoDeserializerInterface`: Interface for DTO deserialization.
+- `RequestToDtoConverterInterface`: Interface for converting requests into DTOs.
+- `RequestSanitizerInterface`: Interface for request sanitization.
+- `RequestHandlerTraitMapProviderInterface`: Interface for providing handler trait mappings.
 
-### Обработчики (Handlers)
-- `DtoRequestHandler`: Основной класс для обработки запросов. Санитизирует запрос, конвертирует в DTO и либо обрабатывает синхронно, либо диспетчеризует в очередь.
-- `DefaultRequestToDtoConverter`: Стандартная реализация конвертера запросов в DTO.
-- `RequestSanitizer`: Класс для санитизации запросов.
+### Handlers
+- `DtoRequestHandler`: The main class for request handling. It sanitizes the request, converts it into a DTO, and either processes it synchronously or dispatches it to a queue.
+- `DefaultRequestToDtoConverter`: Default implementation of the request-to-DTO converter.
+- `RequestSanitizer`: Class responsible for request sanitization.
 
-### Процессоры (Processors)
-- `DataProcessor`: Класс для обработки данных через зарегистрированные процессоры.
+### Processors
+- `DataProcessor`: A class for processing data through registered processors.
 
-### Диспетчеры (Dispatchers)
-- `DtoQueueDispatcherInterface`: Интерфейс для диспетчеризации DTO в очередь.
-- `MessengerQueueDispatcher`: Реализация с использованием Symfony Messenger.
-- `NullQueueDispatcher`: Заглушка для случаев, когда диспетчеризация не требуется.
+### Dispatchers
+- `DtoQueueDispatcherInterface`: Interface for dispatching DTOs to a queue.
+- `MessengerQueueDispatcher`: Implementation based on Symfony Messenger.
+- `NullQueueDispatcher`: Stub implementation for cases where dispatching is not required.
 
-### Сериализация (Serialization)
-- `SymfonyDtoDeserializer`: Реализация десериализатора на основе Symfony Serializer.
+### Serialization
+- `SymfonyDtoDeserializer`: DTO deserializer implementation based on Symfony Serializer.
 
-### Исключения (Exceptions)
-- `RequestException`: Исключение для ошибок обработки запросов.
+### Exceptions
+- `RequestException`: Exception for request processing errors.
 
 ### Dependency Injection
-- `AppLayerProcessorExtension`: Расширение для конфигурации контейнера зависимостей.
+- `AppLayerProcessorExtension`: Extension for configuring the dependency injection container.
 
-## Установка
+## Installation
 
-Добавьте бандл в ваш проект через Composer:
+Add the bundle to your project via Composer:
 
 ```bash
 composer require elrise/application-layer
-```
+````
 
-Зарегистрируйте бандл в `config/bundles.php`:
+Register the bundle in `config/bundles.php`:
 
 ```php
 return [
@@ -66,11 +66,11 @@ return [
 ];
 ```
 
-## Использование
+## Usage
 
-### 1. Создание DTO
+### 1. Creating a DTO
 
-Создайте класс DTO, например:
+Create a DTO class, for example:
 
 ```php
 <?php
@@ -84,9 +84,9 @@ class CreateUserDto
 }
 ```
 
-### 2. Создание обработчика запросов
+### 2. Creating a Request Handler
 
-Реализуйте `RequestHandlerInterface`:
+Implement `RequestHandlerInterface`:
 
 ```php
 <?php
@@ -100,16 +100,16 @@ class CreateUserHandler implements RequestHandlerInterface
 {
     public function handle(Request $request, object $dto): object
     {
-        // Логика обработки
+        // Processing logic
         // $dto instanceof CreateUserDto
-        // Возвращает результат (например, новый объект пользователя)
+        // Returns a result (e.g., a new user object)
     }
 }
 ```
 
-### 3. Использование DtoRequestHandler
+### 3. Using DtoRequestHandler
 
-В контроллере или сервисе:
+In a controller or service:
 
 ```php
 <?php
@@ -129,17 +129,17 @@ class UserController
             $request,
             CreateUserDto::class,
             CreateUserHandler::class,
-            dispatchToQueue: false // или true для асинхронной обработки
+            dispatchToQueue: false // or true for asynchronous processing
         );
 
-        // Обработка результата
+        // Handle the result
     }
 }
 ```
 
-### 4. Использование DataProcessor
+### 4. Using DataProcessor
 
-Для обработки данных без DTO:
+For data processing without DTOs:
 
 ```php
 <?php
@@ -151,12 +151,12 @@ class GetUserProcessor implements DataProcessorInterface
 {
     public function process(Request $request): mixed
     {
-        // Логика обработки данных
+        // Data processing logic
     }
 }
 ```
 
-В сервисе:
+In a service:
 
 ```php
 use Elrise\Bundle\AppLayerBundle\Processor\DataProcessor;
@@ -164,26 +164,28 @@ use Elrise\Bundle\AppLayerBundle\Processor\DataProcessor;
 $result = $this->dataProcessor->process($request, GetUserProcessor::class);
 ```
 
-## Конфигурация
+## Configuration
 
-Бандл автоматически регистрирует сервисы с соответствующими тегами:
-- `app_layer.dto_request_handler` для обработчиков запросов
-- `app_layer.data_processor` для процессоров данных
+The bundle automatically registers services with the corresponding tags:
 
-Для асинхронной обработки требуется установка `symfony/messenger`.
+* `app_layer.dto_request_handler` for request handlers
+* `app_layer.data_processor` for data processors
 
-## Тестирование
+Asynchronous processing requires the `symfony/messenger` package.
 
-Бандл включает набор тестов. Запустите их с помощью PHPUnit:
+## Testing
+
+The bundle includes a test suite. Run it using PHPUnit:
 
 ```bash
 ./vendor/bin/phpunit
 ```
 
-## Лицензия
+## License
 
-Этот бандл распространяется под лицензией MIT.
+This bundle is distributed under the MIT license.
 
-## Авторы
+## Authors
 
-- Alex (alexk@elrise.ru)
+* Alex ([alexk@elrise.ru](mailto:alexk@elrise.ru))
+
