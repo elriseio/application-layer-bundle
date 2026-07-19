@@ -7,6 +7,7 @@ namespace Elrise\Bundle\AppLayerBundle\Tests\Dispatcher;
 use Elrise\Bundle\AppLayerBundle\Dispatcher\MessengerQueueDispatcher;
 use Elrise\Bundle\AppLayerBundle\Exception\RequestException;
 use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
 use stdClass;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -43,7 +44,7 @@ final class MessengerQueueDispatcherTest extends TestCase
 
         $dispatcher = new MessengerQueueDispatcher($bus);
 
-        $property = new \ReflectionProperty(MessengerQueueDispatcher::class, 'messageBus');
+        $property = new ReflectionProperty(MessengerQueueDispatcher::class, 'messageBus');
         $property->setValue($dispatcher, null);
 
         $this->expectException(RequestException::class);

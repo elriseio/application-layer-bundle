@@ -6,6 +6,7 @@ namespace Elrise\Bundle\AppLayerBundle\Tests\Exception;
 
 use Elrise\Bundle\AppLayerBundle\Exception\RequestException;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
 final class RequestExceptionTest extends TestCase
 {
@@ -35,7 +36,7 @@ final class RequestExceptionTest extends TestCase
 
     public function testWithDetailsPreservesMessageCodeAndPrevious(): void
     {
-        $previous = new \RuntimeException('root cause');
+        $previous = new RuntimeException('root cause');
         $original = new RequestException('boom', ['k' => 'v'], 42, $previous);
         $derived = $original->withDetails(['k' => 'v2']);
 

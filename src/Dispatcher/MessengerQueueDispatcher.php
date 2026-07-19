@@ -22,13 +22,7 @@ final class MessengerQueueDispatcher implements DtoQueueDispatcherInterface
     public function dispatch(object $dto): void
     {
         if ($this->messageBus === null) {
-            throw new RequestException(
-                sprintf(
-                    '%s has no message bus wired. Ensure the messenger.default_bus service is configured in your application.',
-                    self::class,
-                ),
-                ['dispatcher' => self::class],
-            );
+            throw new RequestException(sprintf('%s has no message bus wired. Ensure the messenger.default_bus service is configured in your application.', self::class), ['dispatcher' => self::class]);
         }
 
         $this->messageBus->dispatch($dto);

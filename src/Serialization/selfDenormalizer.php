@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Elrise\Bundle\AppLayerBundle\Serialization;
 
+use DateTimeInterface;
 use ReflectionClass;
+use Stringable;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use UnitEnum;
 
 /**
  * Denormalizer that routes to ObjectNormalizer for classes with a
@@ -61,15 +64,15 @@ final class selfDenormalizer implements DenormalizerInterface
             return false;
         }
 
-        if (is_subclass_of($type, \DateTimeInterface::class)) {
+        if (is_subclass_of($type, DateTimeInterface::class)) {
             return false;
         }
 
-        if (is_subclass_of($type, \UnitEnum::class)) {
+        if (is_subclass_of($type, UnitEnum::class)) {
             return false;
         }
 
-        if (is_subclass_of($type, \Stringable::class)) {
+        if (is_subclass_of($type, Stringable::class)) {
             return false;
         }
 
@@ -83,9 +86,9 @@ final class selfDenormalizer implements DenormalizerInterface
     public function getSupportedTypes(?string $format): array
     {
         return [
-            \DateTimeInterface::class => false,
-            \UnitEnum::class => false,
-            \Stringable::class => false,
+            DateTimeInterface::class => false,
+            UnitEnum::class => false,
+            Stringable::class => false,
             'object' => true,
             '*' => false,
         ];

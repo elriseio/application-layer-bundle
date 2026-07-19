@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - main
+      - develop
   pull_request:
     branches:
       - main
+      - develop
 
 jobs:
   check:
@@ -20,6 +22,9 @@ jobs:
           - '8.3'
           - '8.4'
           - '8.5'
+
+    env:
+      PHP_CS_FIXER_IGNORE_ENV: '1'
 
     steps:
       - name: Checkout
@@ -49,8 +54,5 @@ jobs:
       - name: Validate composer.json
         run: composer validate --strict
 
-      - name: Run code-style check
-        run: composer cs:check
-
-      - name: Run test suite
-        run: composer test
+      - name: Run composer check
+        run: composer check

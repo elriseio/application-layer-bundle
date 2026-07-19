@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace Elrise\Bundle\AppLayerBundle\Tests\Serialization;
 
 use DateTimeImmutable;
+use DateTimeInterface;
 use Elrise\Bundle\AppLayerBundle\Serialization\selfDenormalizer;
 use PHPUnit\Framework\TestCase;
 use stdClass;
+use Stringable;
 use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
+use UnitEnum;
 
 final class SelfDenormalizerTest extends TestCase
 {
@@ -53,12 +56,12 @@ final class SelfDenormalizerTest extends TestCase
 
         $types = $denormalizer->getSupportedTypes(null);
 
-        $this->assertArrayHasKey(\DateTimeInterface::class, $types);
-        $this->assertFalse($types[\DateTimeInterface::class]);
-        $this->assertArrayHasKey(\UnitEnum::class, $types);
-        $this->assertFalse($types[\UnitEnum::class]);
-        $this->assertArrayHasKey(\Stringable::class, $types);
-        $this->assertFalse($types[\Stringable::class]);
+        $this->assertArrayHasKey(DateTimeInterface::class, $types);
+        $this->assertFalse($types[DateTimeInterface::class]);
+        $this->assertArrayHasKey(UnitEnum::class, $types);
+        $this->assertFalse($types[UnitEnum::class]);
+        $this->assertArrayHasKey(Stringable::class, $types);
+        $this->assertFalse($types[Stringable::class]);
         $this->assertArrayHasKey('object', $types);
         $this->assertTrue($types['object']);
         $this->assertArrayHasKey('*', $types);
@@ -66,7 +69,7 @@ final class SelfDenormalizerTest extends TestCase
     }
 }
 
-final class StringableStub implements \Stringable
+final class StringableStub implements Stringable
 {
     public function __toString(): string
     {
