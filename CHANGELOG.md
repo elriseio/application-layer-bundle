@@ -13,6 +13,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Packagist readiness metadata on `composer.json`: `keywords`
   (`symfony`, `symfony-bundle`, `cqrs`, `ddd`, `application-layer`,
   `dto`, `messenger`) for faceted search (AR-010).
+- Packagist UI metadata on `composer.json`: `homepage` (GitHub repo)
+  and a `support` block with `issues`, `source`, and `docs` links
+  (AR-014).
+- `composer.json` carries `version: 1.0.0` removed in favour of git
+  tags, plus `extra.branch-alias.dev-main = 1.x-dev` so
+  `composer require elriseio/application-layer-bundle:dev-main`
+  resolves before the first tag is published (AR-014).
+- `composer.json` `scripts` block now exposes `cs:check`
+  (`php-cs-fixer fix --dry-run --diff`), `test` (phpunit), and
+  `check` (`[@cs:check, @test]`) alongside the existing `cs:fix`
+  (AR-014).
 - CQRS-shaped contracts: `CommandHandlerInterface` (mutating state)
   and `QueryHandlerInterface` (read-only), each registered through
   its own tagged service locator (`app_layer.command_handler` and
