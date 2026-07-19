@@ -322,6 +322,28 @@ composer test
 
 See [CHANGELOG.md](CHANGELOG.md) for release history.
 
+## Development
+
+The bundle ships with a project-local pre-commit hook that runs
+`composer check` (`cs:check` + `test`) so style drift and test
+breakage are caught locally before push. The hook is wired through
+`core.hooksPath`, so it only takes effect inside this checkout.
+
+Install the hook once after cloning:
+
+```bash
+./scripts/install-hooks.sh
+```
+
+This sets `core.hooksPath` to `./.githooks`. The hook then runs
+automatically before every commit; bypass it with `git commit --no-verify`
+when a commit legitimately needs to land without a re-run (for example,
+a `composer.lock` rotation triggered by a maintainer-only action).
+
+`composer install` does not auto-install the hook on purpose: CI must
+not be polluted by `git config` calls, and the operator may prefer
+their own tooling (Lefthook, Husky) over the bundled bash hook.
+
 ## License
 
 MIT. See [LICENSE](LICENSE).
