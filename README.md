@@ -1,9 +1,9 @@
 # AppLayerBundle
 
 [![CI](https://github.com/elriseio/application-layer-bundle/actions/workflows/ci.yml/badge.svg)](https://github.com/elriseio/application-layer-bundle/actions/workflows/ci.yml)
-[![Latest Stable Version](https://poser.pugx.org/elriseio/application-layer-bundle/v)](https://packagist.org/packages/elriseio/application-layer-bundle)
-[![Total Downloads](https://poser.pugx.org/elriseio/application-layer-bundle/downloads)](https://packagist.org/packages/elriseio/application-layer-bundle)
-[![License](https://poser.pugx.org/elriseio/application-layer-bundle/license)](https://github.com/elriseio/application-layer-bundle/blob/main/LICENSE)
+[![Latest Stable Version](https://img.shields.io/packagist/v/elriseio/application-layer-bundle.svg)](https://packagist.org/packages/elriseio/application-layer-bundle)
+[![Total Downloads](https://img.shields.io/packagist/dt/elriseio/application-layer-bundle.svg)](https://packagist.org/packages/elriseio/application-layer-bundle)
+[![License](https://img.shields.io/packagist/l/elriseio/application-layer-bundle.svg)](https://github.com/elriseio/application-layer-bundle/blob/main/LICENSE)
 
 Symfony bundle that implements the application boundary of a CQRS-shaped
 DDD system. It carries the HTTP request through sanitization → DTO
