@@ -111,7 +111,10 @@ composer require elriseio/application-layer-bundle
 
 ## Requirements
 
-- PHP 8.3 or higher
+- PHP 8.3 or higher with the `ctype`, `curl`, and `json` extensions
+  enabled (all three are bundled by default in standard PHP
+  distributions; they are listed in `composer.json` `require` for
+  runtime-declaration clarity).
 - Symfony 7.2 or higher
 
 Register the bundle:
