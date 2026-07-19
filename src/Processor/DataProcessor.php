@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Elrise\Bundle\AppLayerBundle\Processor;
 
-use InvalidArgumentException;
 use Elrise\Bundle\AppLayerBundle\Contract\DataProcessorInterface;
+use Elrise\Bundle\AppLayerBundle\Exception\RequestException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -27,7 +27,7 @@ final class DataProcessor
     public function process(Request $request, string $processorFqcn): mixed
     {
         if (!is_subclass_of($processorFqcn, DataProcessorInterface::class)) {
-            throw new InvalidArgumentException(sprintf('Class "%s" must implement interface "%s".', $processorFqcn, DataProcessorInterface::class));
+            throw new RequestException(sprintf('Class "%s" must implement interface "%s".', $processorFqcn, DataProcessorInterface::class), ['processor' => $processorFqcn, 'expected_interface' => DataProcessorInterface::class]);
         }
 
         $processor = $this->locator->get($processorFqcn);

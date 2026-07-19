@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Elrise\Bundle\AppLayerBundle\Tests\Processor;
 
 use Elrise\Bundle\AppLayerBundle\Contract\DataProcessorInterface;
+use Elrise\Bundle\AppLayerBundle\Exception\RequestException;
 use Elrise\Bundle\AppLayerBundle\Processor\DataProcessor;
 use Exception;
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -42,12 +42,26 @@ final class DataProcessorTest extends TestCase
 
     public function testProcessThrowsIfClassDoesNotImplementInterface(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(RequestException::class);
+        $this->expectExceptionMessage('Class "stdClass" must implement interface "Elrise\Bundle\AppLayerBundle\Contract\DataProcessorInterface".');
 
         $locator = $this->createStub(ContainerInterface::class);
         $dataProcessor = new DataProcessor($locator);
 
         $dataProcessor->process(new Request(), stdClass::class);
+    }
+
+    public function testProcessThrowsRequestExceptionWithDetails(): void
+    {
+        $locator = $this->createStub(ContainerInterface::class);
+        $dataProcessor = new DataProcessor($locator);
+
+        try {
+            $dataProcessor->process(new Request(), stdClass::class);
+            $this->fail('Expected RequestException was not thrown.');
+        } catch (RequestException $e) {
+            $this->assertSame(['processor' => stdClass::class, 'expected_interface' => DataProcessorInterface::class], $e->getDetails());
+        }
     }
 
     public function testProcessThrowsIfServiceNotFound(): void
