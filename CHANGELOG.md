@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Packagist readiness metadata on `composer.json`: `keywords`
+  (`symfony`, `symfony-bundle`, `cqrs`, `ddd`, `application-layer`,
+  `dto`, `messenger`) for faceted search (AR-010).
 - CQRS-shaped contracts: `CommandHandlerInterface` (mutating state)
   and `QueryHandlerInterface` (read-only), each registered through
   its own tagged service locator (`app_layer.command_handler` and
