@@ -9,6 +9,10 @@ services:
     Elrise\Bundle\AppLayerBundle\Contract\DtoDeserializerInterface:
         alias: Elrise\Bundle\AppLayerBundle\Serialization\SymfonyDtoDeserializer
 
+    Elrise\Bundle\AppLayerBundle\Serialization\SymfonyDtoDeserializer:
+        arguments:
+            $defaultGroup: '%app_layer.default_deserialize_group%'
+
     Elrise\Bundle\AppLayerBundle\Contract\RequestSanitizerInterface:
         alias: Elrise\Bundle\AppLayerBundle\Handler\RequestSanitizer
 
