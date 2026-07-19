@@ -13,14 +13,16 @@ class RequestException extends Exception
     public function __construct(string $msg = '', array $details = [], int $code = 0, ?Exception $prev = null)
     {
         parent::__construct($msg, $code, $prev);
-        $this->setDetails($details);
+        $this->details = $details;
     }
 
-    public function setDetails(array $details): self
+    public function withDetails(array $details): self
     {
-        $this->details = $details;
+        $new = new self($this->getMessage(), $details, $this->getCode(), $this->getPrevious());
+        $new->file = $this->file;
+        $new->line = $this->line;
 
-        return $this;
+        return $new;
     }
 
     public function getDetails(): array
