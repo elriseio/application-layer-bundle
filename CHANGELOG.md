@@ -97,4 +97,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `ReflectionProperty::setAccessible(true)` from the property-only
   DTO path.
 
+<!-- markdownlint-disable MD041 -->
+This file follows the
+[Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/) format.
+<!-- markdownlint-enable MD041 -->
+
 [1.0.0]: https://github.com/elriseio/application-layer-bundle/releases/tag/v1.0.0
