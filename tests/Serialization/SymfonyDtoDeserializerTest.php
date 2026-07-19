@@ -4,13 +4,9 @@ declare(strict_types=1);
 
 namespace Elrise\Bundle\AppLayerBundle\Tests\Serialization;
 
+use Elrise\Bundle\AppLayerBundle\Exception\RequestException;
 use Elrise\Bundle\AppLayerBundle\Serialization\SymfonyDtoDeserializer;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\PropertyAccess\PropertyAccessor;
-use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
 
 class SymfonyDtoDeserializerTest extends TestCase
 {
@@ -46,11 +42,19 @@ class SymfonyDtoDeserializerTest extends TestCase
         $this->assertSame(123, $dto->getCount());
     }
 
+    public function testWrapsDenormalizationFailureInRequestException(): void
+    {
+        $this->expectException(RequestException::class);
+
+        $this->deserializer->denormalize(
+            ['id' => 'x', 'unknownField' => 'nope'],
+            PrivatePropertyDto::class,
+        );
+    }
+
     protected function setUp(): void
     {
-        $normalizer = new ObjectNormalizer(null, null, new PropertyAccessor(), new ReflectionExtractor());
-        $serializer = new Serializer([$normalizer], [new JsonEncoder()]);
-        $this->deserializer = new SymfonyDtoDeserializer($serializer);
+        $this->deserializer = SymfonyDtoDeserializer::createDefault();
     }
 }
 
@@ -78,8 +82,16 @@ final class PrivatePropertyDto
     {
         return $this->id;
     }
+
     public function getCount(): int
     {
         return $this->count;
+    }
+}
+
+final class NotADto
+{
+    public function __construct(public string $id)
+    {
     }
 }

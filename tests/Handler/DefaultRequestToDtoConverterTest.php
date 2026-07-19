@@ -1,10 +1,12 @@
 <?php
 
-namespace Elrise\Bundle\AppLayerBundle\Tests\Handler;
+declare(strict_types=1);
 
+namespace Elrise\Bundle\AppLayerBundle\Tests\Handler;
 
 use Elrise\Bundle\AppLayerBundle\Contract\DtoDeserializerInterface;
 use Elrise\Bundle\AppLayerBundle\Handler\DefaultRequestToDtoConverter;
+use JsonException;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -56,12 +58,12 @@ final class DefaultRequestToDtoConverterTest extends TestCase
 
     public function testConvertThrowsOnInvalidJson(): void
     {
-        $this->expectException(\JsonException::class);
+        $this->expectException(JsonException::class);
 
         $request = new Request([], [], [], [], [], [], '{invalid json');
         $request->headers->set('Content-Type', 'application/json');
 
-        $deserializer = $this->createMock(DtoDeserializerInterface::class);
+        $deserializer = $this->createStub(DtoDeserializerInterface::class);
         $converter = new DefaultRequestToDtoConverter($deserializer);
 
         $converter->convert($request, DummyDto::class);
@@ -72,7 +74,7 @@ class DummyDto
 {
     public function __construct(
         public string $name,
-        public ?int $age = null
+        public ?int $age = null,
     ) {
     }
 }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Elrise\Bundle\AppLayerBundle\DependencyInjection;
 
-use Elrise\Bundle\AppLayerBundle\DependencyInjection\Compiler\DataProcessorPass;
 use Elrise\Bundle\AppLayerBundle\Dispatcher\DtoQueueDispatcherInterface;
 use Elrise\Bundle\AppLayerBundle\Dispatcher\MessengerQueueDispatcher;
 use Elrise\Bundle\AppLayerBundle\Dispatcher\NullQueueDispatcher;
@@ -19,19 +18,7 @@ class AppLayerProcessorExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container): void
     {
-        $container->addCompilerPass(new DataProcessorPass());
-
-        if (class_exists(MessageBusInterface::class)) {
-            $definition = new Definition(MessengerQueueDispatcher::class);
-            $definition->setAutowired(true);
-            $definition->setAutoconfigured(true);
-            $container->setDefinition(DtoQueueDispatcherInterface::class, $definition);
-        } else {
-            $container->setAlias(
-                DtoQueueDispatcherInterface::class,
-                NullQueueDispatcher::class,
-            );
-        }
+        $this->registerQueueDispatcher($container);
 
         $loader = new YamlFileLoader(
             $container,
@@ -39,5 +26,22 @@ class AppLayerProcessorExtension extends Extension
         );
 
         $loader->load('services.yaml');
+    }
+
+    private function registerQueueDispatcher(ContainerBuilder $container): void
+    {
+        if (class_exists(MessageBusInterface::class)) {
+            $definition = new Definition(MessengerQueueDispatcher::class);
+            $definition->setAutowired(true);
+            $definition->setAutoconfigured(true);
+            $container->setDefinition(DtoQueueDispatcherInterface::class, $definition);
+
+            return;
+        }
+
+        $container->setAlias(
+            DtoQueueDispatcherInterface::class,
+            NullQueueDispatcher::class,
+        );
     }
 }

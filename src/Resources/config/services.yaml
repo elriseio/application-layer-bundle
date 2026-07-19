@@ -2,15 +2,12 @@ parameters:
     app_layer.default_deserialize_group: null
 
 services:
-    # === Contract ===
+    # === Contract aliases ===
     Elrise\Bundle\AppLayerBundle\Contract\DataProcessorInterface:
         alias: Elrise\Bundle\AppLayerBundle\Processor\DataProcessor
 
     Elrise\Bundle\AppLayerBundle\Contract\DtoDeserializerInterface:
-        alias: Elrise\Bundle\AppLayerBundle\Serialize\SymfonyDtoDeserializer
-
-    Elrise\Bundle\AppLayerBundle\Contract\RequestHandlerTraitMapProviderInterface:
-        alias: Elrise\Bundle\AppLayerBundle\Handler\DefaultRequestHandlerTraitMapProvider
+        alias: Elrise\Bundle\AppLayerBundle\Serialization\SymfonyDtoDeserializer
 
     Elrise\Bundle\AppLayerBundle\Contract\RequestSanitizerInterface:
         alias: Elrise\Bundle\AppLayerBundle\Handler\RequestSanitizer
@@ -18,12 +15,10 @@ services:
     Elrise\Bundle\AppLayerBundle\Contract\RequestToDtoConverterInterface:
         alias: Elrise\Bundle\AppLayerBundle\Handler\DefaultRequestToDtoConverter
 
-    Elrise\Bundle\AppLayerBundle\Dispatcher\DtoQueueDispatcherInterface:
-        alias: Elrise\Bundle\AppLayerBundle\Messenger\MessengerQueueDispatcher
-
+    # DtoQueueDispatcherInterface is registered conditionally by AppLayerProcessorExtension
+    # (MessengerQueueDispatcher when symfony/messenger is installed, NullQueueDispatcher otherwise).
 
     # === DependencyInjection ===
-    Elrise\Bundle\AppLayerBundle\DependencyInjection\Compiler\DataProcessorPass: ~
     Elrise\Bundle\AppLayerBundle\DependencyInjection\AppLayerProcessorExtension: ~
 
     # === Exception ===
@@ -32,23 +27,20 @@ services:
     # === Handler ===
     Elrise\Bundle\AppLayerBundle\Handler\DtoRequestHandler:
         arguments:
-            $locator: !tagged_locator { tag: 'app_layer.dto_request_handler' }
-            $traitMapProvider: 'Elrise\Bundle\AppLayerBundle\DefaultRequestHandlerTraitMapProvider'
+            $commandLocator: !tagged_locator { tag: 'app_layer.command_handler' }
+            $queryLocator: !tagged_locator { tag: 'app_layer.query_handler' }
             $dtoConverter: '@Elrise\Bundle\AppLayerBundle\Handler\DefaultRequestToDtoConverter'
-            $queueDispatcher: '@Elrise\Bundle\AppLayerBundle\Dispatcher\MessengerQueueDispatcher'
+            $queueDispatcher: '@Elrise\Bundle\AppLayerBundle\Dispatcher\DtoQueueDispatcherInterface'
             $requestSanitizer: '@?Elrise\Bundle\AppLayerBundle\Handler\RequestSanitizer'
             $logger: '@?logger'
 
     Elrise\Bundle\AppLayerBundle\Handler\DefaultRequestToDtoConverter:
         arguments:
-            $deserializer: '@Elrise\Bundle\AppLayerBundle\Serialize\SymfonyDtoDeserializer'
+            $deserializer: '@Elrise\Bundle\AppLayerBundle\Serialization\SymfonyDtoDeserializer'
 
     Elrise\Bundle\AppLayerBundle\Handler\RequestSanitizer: ~
 
-    Elrise\Bundle\AppLayerBundle\Handler\DefaultRequestHandlerTraitMapProvider: ~
-
-
-    # === Messenger ===
+    # === Dispatcher ===
     Elrise\Bundle\AppLayerBundle\Dispatcher\MessengerQueueDispatcher:
         arguments:
             $messageBus: '@?messenger.default_bus'
@@ -59,11 +51,3 @@ services:
     Elrise\Bundle\AppLayerBundle\Processor\DataProcessor:
         arguments:
             $locator: !tagged_locator { tag: 'app_layer.data_processor' }
-
-    # === Serialize ===
-    Elrise\Bundle\AppLayerBundle\Serialization\SymfonyDtoDeserializer:
-        arguments:
-            $serializer: '@serializer'
-            $defaultGroup: '%app_layer.default_deserialize_group%'
-            tags:
-                - { name: 'serializer.normalizer' }
