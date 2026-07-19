@@ -9,9 +9,9 @@ use Elrise\Bundle\AppLayerBundle\Exception\RequestException;
 use Elrise\Bundle\AppLayerBundle\Processor\DataProcessor;
 use Exception;
 use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use stdClass;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\Request;
 
 final class DataProcessorTest extends TestCase
@@ -27,7 +27,7 @@ final class DataProcessorTest extends TestCase
             ->with($request)
             ->willReturn('processed');
 
-        $locator = $this->createMock(ContainerInterface::class);
+        $locator = $this->createMock(ServiceLocator::class);
         $locator->expects($this->once())
             ->method('get')
             ->with($processorFqcn)
@@ -45,7 +45,7 @@ final class DataProcessorTest extends TestCase
         $this->expectException(RequestException::class);
         $this->expectExceptionMessage('Class "stdClass" must implement interface "Elrise\Bundle\AppLayerBundle\Contract\DataProcessorInterface".');
 
-        $locator = $this->createStub(ContainerInterface::class);
+        $locator = $this->createStub(ServiceLocator::class);
         $dataProcessor = new DataProcessor($locator);
 
         $dataProcessor->process(new Request(), stdClass::class);
@@ -53,7 +53,7 @@ final class DataProcessorTest extends TestCase
 
     public function testProcessThrowsRequestExceptionWithDetails(): void
     {
-        $locator = $this->createStub(ContainerInterface::class);
+        $locator = $this->createStub(ServiceLocator::class);
         $dataProcessor = new DataProcessor($locator);
 
         try {
@@ -70,7 +70,7 @@ final class DataProcessorTest extends TestCase
 
         $processorFqcn = DummyProcessor::class;
 
-        $locator = $this->createStub(ContainerInterface::class);
+        $locator = $this->createStub(ServiceLocator::class);
         $locator->method('get')
             ->willThrowException(new class extends Exception implements NotFoundExceptionInterface {});
 

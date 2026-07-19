@@ -7,16 +7,16 @@ namespace Elrise\Bundle\AppLayerBundle\Processor;
 use Elrise\Bundle\AppLayerBundle\Contract\DataProcessorInterface;
 use Elrise\Bundle\AppLayerBundle\Exception\RequestException;
 use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\DependencyInjection\Attribute\TaggedLocator;
+use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\Request;
 
 final class DataProcessor
 {
     public function __construct(
         #[TaggedLocator('app_layer.data_processor')]
-        private ContainerInterface $locator,
+        private readonly ServiceLocator $locator,
     ) {
     }
 
