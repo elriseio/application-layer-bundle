@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Elrise\Bundle\AppLayerBundle\Tests\Handler;
 
 use Elrise\Bundle\AppLayerBundle\Contract\DtoDeserializerInterface;
+use Elrise\Bundle\AppLayerBundle\Exception\RequestException;
 use Elrise\Bundle\AppLayerBundle\Handler\DefaultRequestToDtoConverter;
 use JsonException;
 use PHPUnit\Framework\TestCase;
@@ -56,9 +57,9 @@ final class DefaultRequestToDtoConverterTest extends TestCase
         $this->assertSame(30, $dto->age);
     }
 
-    public function testConvertThrowsOnInvalidJson(): void
+    public function testConvertThrowsRequestExceptionOnInvalidJson(): void
     {
-        $this->expectException(JsonException::class);
+        $this->expectException(RequestException::class);
 
         $request = new Request([], [], [], [], [], [], '{invalid json');
         $request->headers->set('Content-Type', 'application/json');
@@ -67,6 +68,25 @@ final class DefaultRequestToDtoConverterTest extends TestCase
         $converter = new DefaultRequestToDtoConverter($deserializer);
 
         $converter->convert($request, DummyDto::class);
+    }
+
+    public function testExtractDataWrapsJsonExceptionWithSourceDetailAndPreservesPrevious(): void
+    {
+        $request = new Request([], [], [], [], [], [], '{invalid json');
+        $request->headers->set('Content-Type', 'application/json');
+
+        $deserializer = $this->createStub(DtoDeserializerInterface::class);
+        $converter = new DefaultRequestToDtoConverter($deserializer);
+
+        try {
+            $converter->convert($request, DummyDto::class);
+            $this->fail('Expected RequestException was not thrown.');
+        } catch (RequestException $e) {
+            $this->assertSame(['source' => 'json'], $e->getDetails());
+
+            $previous = $e->getPrevious();
+            $this->assertInstanceOf(JsonException::class, $previous);
+        }
     }
 }
 
