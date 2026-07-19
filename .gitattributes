@@ -1,0 +1,21 @@
+# Git archive export rules (used by `git archive` and Packagist).
+# Rules ending in `export-ignore` are excluded from the published archive.
+
+/tests                                export-ignore
+/.php-cs-fixer.dist.php               export-ignore
+/.php-cs-fixer.cache                  export-ignore
+/phpunit.xml.dist                     export-ignore
+/.phpunit.result.cache                export-ignore
+/.gitignore                           export-ignore
+/.gitattributes                       export-ignore
+/.github                              export-ignore
+/Makefile                             export-ignore
+/Makefile.agent                       export-ignore
+/memory.json                          export-ignore
+/.symposium                           export-ignore
+/.githooks                            export-ignore
+/scripts                              export-ignore
+/docs/architecture/STATUS.md          export-ignore
+/docs/ROADMAP.md                      export-ignore
+/docs/RUNBOOK.md                      export-ignore
+/Issues                               export-ignore

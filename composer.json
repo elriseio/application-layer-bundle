@@ -1,9 +1,23 @@
 {
-  "name": "elrise/application-layer",
+  "name": "elriseio/application-layer-bundle",
   "description": "Emphasizes that this is the Application Layer, not tied to the API specifics or any particular domain.",
   "type": "symfony-bundle",
   "license": "MIT",
-  "version": "1.0.0",
+  "keywords": [
+    "symfony",
+    "symfony-bundle",
+    "cqrs",
+    "ddd",
+    "application-layer",
+    "dto",
+    "messenger"
+  ],
+  "homepage": "https://github.com/elriseio/application-layer-bundle",
+  "support": {
+    "issues": "https://github.com/elriseio/application-layer-bundle/issues",
+    "source": "https://github.com/elriseio/application-layer-bundle",
+    "docs": "https://github.com/elriseio/application-layer-bundle#readme"
+  },
   "authors": [
     {
       "name": "AlexK",
@@ -46,7 +60,18 @@
     "friendsofphp/php-cs-fixer": "^3.74"
   },
   "scripts": {
-    "cs:fix": "@php vendor/bin/php-cs-fixer fix"
+    "cs:fix": "@php vendor/bin/php-cs-fixer fix",
+    "cs:check": "@php vendor/bin/php-cs-fixer fix --dry-run --diff",
+    "test": "@php vendor/bin/phpunit",
+    "check": [
+      "@cs:check",
+      "@test"
+    ]
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-main": "1.x-dev"
+    }
   },
   "suggest": {
     "symfony/messenger": "Required to enable async queueing via DtoQueueDispatcherInterface"

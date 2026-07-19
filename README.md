@@ -1,5 +1,10 @@
 # AppLayerBundle
 
+[![CI](https://github.com/elriseio/application-layer-bundle/actions/workflows/ci.yml/badge.svg)](https://github.com/elriseio/application-layer-bundle/actions/workflows/ci.yml)
+[![Latest Stable Version](https://poser.pugx.org/elriseio/application-layer-bundle/v)](https://packagist.org/packages/elriseio/application-layer-bundle)
+[![Total Downloads](https://poser.pugx.org/elriseio/application-layer-bundle/downloads)](https://packagist.org/packages/elriseio/application-layer-bundle)
+[![License](https://poser.pugx.org/elriseio/application-layer-bundle/license)](https://github.com/elriseio/application-layer-bundle/blob/main/LICENSE)
+
 Symfony bundle that implements the application boundary of a CQRS-shaped
 DDD system. It carries the HTTP request through sanitization → DTO
 denormalization → command or query handler invocation → optional queue
@@ -101,8 +106,13 @@ DtoRequestHandler
 ## Installation
 
 ```bash
-composer require elrise/application-layer
+composer require elriseio/application-layer-bundle
 ```
+
+## Requirements
+
+- PHP 8.3 or higher
+- Symfony 7.2 or higher
 
 Register the bundle:
 
@@ -302,9 +312,13 @@ handlers.
 The bundle ships with PHPUnit coverage for the pipeline. Run:
 
 ```bash
-vendor/bin/phpunit
+composer test
 ```
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for release history.
 
 ## License
 
-MIT. See `composer.json`.
+MIT. See [LICENSE](LICENSE).

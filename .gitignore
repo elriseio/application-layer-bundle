@@ -23,3 +23,9 @@ vendor/
 
 # cs-fix
 /.php-cs-fixer.cache
+.symposium/
+Makefile.agent
+memory.json
+Makefile
+Issues/
+docs/
