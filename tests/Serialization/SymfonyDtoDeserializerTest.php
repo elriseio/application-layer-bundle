@@ -7,6 +7,8 @@ namespace Elrise\Bundle\AppLayerBundle\Tests\Serialization;
 use Elrise\Bundle\AppLayerBundle\Exception\RequestException;
 use Elrise\Bundle\AppLayerBundle\Serialization\SymfonyDtoDeserializer;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 class SymfonyDtoDeserializerTest extends TestCase
 {
@@ -50,6 +52,61 @@ class SymfonyDtoDeserializerTest extends TestCase
             ['id' => 'x', 'unknownField' => 'nope'],
             PrivatePropertyDto::class,
         );
+    }
+
+    public function testDenormalizePassesGroupsContextWhenDefaultGroupIsSet(): void
+    {
+        $serializer = $this->createMock(DenormalizerInterface::class);
+        $serializer->expects($this->once())
+            ->method('denormalize')
+            ->with(
+                $this->isArray(),
+                $this->isString(),
+                $this->isNull(),
+                $this->callback(
+                    static fn (array $context): bool => isset($context[AbstractNormalizer::GROUPS])
+                        && $context[AbstractNormalizer::GROUPS] === ['myGroup'],
+                ),
+            )
+            ->willReturn(new ConstructorDto('abc', 1));
+
+        $deserializer = new SymfonyDtoDeserializer($serializer, 'myGroup');
+
+        $deserializer->denormalize(['id' => 'abc', 'count' => 1], ConstructorDto::class);
+    }
+
+    public function testDenormalizeOmitsGroupsContextWhenDefaultGroupIsNull(): void
+    {
+        $serializer = $this->createMock(DenormalizerInterface::class);
+        $serializer->expects($this->once())
+            ->method('denormalize')
+            ->with(
+                $this->isArray(),
+                $this->isString(),
+                $this->isNull(),
+                $this->callback(
+                    static fn (array $context): bool => !isset($context[AbstractNormalizer::GROUPS]),
+                ),
+            )
+            ->willReturn(new ConstructorDto('abc', 1));
+
+        $deserializer = new SymfonyDtoDeserializer($serializer, null);
+
+        $deserializer->denormalize(['id' => 'abc', 'count' => 1], ConstructorDto::class);
+    }
+
+    public function testCreateDefaultWithGroupProducesWorkingDeserializer(): void
+    {
+        $deserializer = SymfonyDtoDeserializer::createDefault('myGroup');
+
+        $dto = $deserializer->denormalize(
+            ['id' => 'fromFactory', 'count' => 42],
+            ConstructorDto::class,
+        );
+
+        $this->assertInstanceOf(ConstructorDto::class, $dto);
+        $this->assertSame('fromFactory', $dto->id);
+        $this->assertSame(42, $dto->count);
     }
 
     protected function setUp(): void
