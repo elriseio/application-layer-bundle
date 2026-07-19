@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Repository `LICENSE` file (MIT) at the repo root, with the
+  contributor copyright line `Copyright (c) 2026 Elrise.IO Alexk
+  <alexk@elrise.io>` (AR-015). Packagist and most open-source
+  tooling require this file by name (`LICENSE`, `LICENSE.md`,
+  or `LICENSE.txt`); it ships verbatim alongside `composer.json`'s
+  `license: MIT` declaration.
 - Packagist readiness metadata on `composer.json`: `keywords`
   (`symfony`, `symfony-bundle`, `cqrs`, `ddd`, `application-layer`,
   `dto`, `messenger`) for faceted search (AR-010).
