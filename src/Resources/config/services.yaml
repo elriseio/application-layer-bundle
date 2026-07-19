@@ -47,7 +47,7 @@ services:
     # === Dispatcher ===
     Elrise\Bundle\AppLayerBundle\Dispatcher\MessengerQueueDispatcher:
         arguments:
-            $messageBus: '@?messenger.default_bus'
+            $messageBus: '@messenger.default_bus'
 
     Elrise\Bundle\AppLayerBundle\Dispatcher\NullQueueDispatcher: ~
 

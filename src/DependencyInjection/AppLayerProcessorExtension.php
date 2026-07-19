@@ -30,7 +30,7 @@ class AppLayerProcessorExtension extends Extension
 
     private function registerQueueDispatcher(ContainerBuilder $container): void
     {
-        if (class_exists(MessageBusInterface::class)) {
+        if (interface_exists(MessageBusInterface::class) && $container->has('messenger.default_bus')) {
             $definition = new Definition(MessengerQueueDispatcher::class);
             $definition->setAutowired(true);
             $definition->setAutoconfigured(true);
