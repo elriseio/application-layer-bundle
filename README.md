@@ -9,6 +9,7 @@
 
 - [CQRS application layer for API Platform](https://elrise.io/articles/cqrs-application-layer-api-platform/) — the architectural rationale behind this bundle: separating the transport, application, and domain layers in a CQRS-shaped Symfony system and mapping the boundary onto API Platform state providers and processors.
 - [Application Layer Bundle project page](https://elrise.io/projects/application-layer-bundle/) — overview, supported features, installation notes, and release notes.
+- [demo_application_layer](https://github.com/elriseio/demo_application_layer) — a runnable reference implementation of the bundle, showing how DTOs, command/query handlers, controllers, and the API Platform state provider/processor wiring fit together in a real Symfony application.
 
 Symfony bundle that implements the application boundary of a CQRS-shaped
 DDD system. It carries the HTTP request through sanitization → DTO
